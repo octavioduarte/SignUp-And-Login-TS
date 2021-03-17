@@ -5,8 +5,11 @@ import {
     forbidden, 
     NoPermissionToRegisterNewUser,
     SignUpControllerRequestType,
-    CodeErrors as code_errors
+    CodeErrors as code_errors,
+    serverError,
+    ServerError
 } from '../../src/types'
+import { throwError } from '../mock/types/internal-error-helper'
 
 const mockRequest = (): SignUpControllerRequestType => ({
     email: faker.internet.email(),
@@ -50,5 +53,12 @@ describe('SignUp Controller', () => {
         createAccountSpy.result = code_errors.no_permission
         const httpResponse = await sut.handle(mockRequest())
         expect(httpResponse).toEqual(forbidden(new NoPermissionToRegisterNewUser()))
-      })
+    })
+
+    test('Should return 500 if CreateAccount throws', async () => {
+        const { sut, createAccountSpy } = makeSut()
+        jest.spyOn(createAccountSpy, 'create').mockImplementationOnce(throwError)
+        const httpResponse = await sut.handle(mockRequest())
+        expect(httpResponse).toEqual(serverError(new ServerError(null as any)))
+    })
 }) 

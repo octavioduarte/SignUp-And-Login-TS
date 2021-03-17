@@ -6,7 +6,7 @@
       "lib": ["es6"],                     
       "allowJs": true,
       "outDir": "dist",                          
-      "rootDir": "src",
+      "rootDirs": ["src", "test"],
       "strict": true,         
       "noImplicitAny": true,
       "esModuleInterop": true,

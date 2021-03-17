@@ -1,10 +1,10 @@
-import 
-    {   SignUpControllerRequestType,
-        CreateAccount,
-        CodeErrors as code_errors 
-} from "../types/controllers/signup";
-import { forbidden } from "../types/helpers/response-http";
-import { NoPermissionToRegisterNewUser } from "../types/errors/no-permission-to-register-new-user";
+import {
+    forbidden,
+    CreateAccount, 
+    NoPermissionToRegisterNewUser,
+    SignUpControllerRequestType,
+    CodeErrors as code_errors
+} from '../../src/types'
 
 export class SignUpController {
     constructor(

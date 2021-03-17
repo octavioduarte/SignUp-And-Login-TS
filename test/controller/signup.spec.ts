@@ -1,9 +1,12 @@
 import faker from 'faker'
 import { SignUpController } from '../../src/controller/signup'
-import { SignUpControllerRequestType, CodeErrors as code_errors } from '../../src/types/controllers/signup'
 import { CreateAccountSpy } from '../mock/signup'
-import { forbidden } from '../../src/types/helpers/response-http'
-import { NoPermissionToRegisterNewUser } from '../../src/types/errors/no-permission-to-register-new-user'
+import {
+    forbidden, 
+    NoPermissionToRegisterNewUser,
+    SignUpControllerRequestType,
+    CodeErrors as code_errors
+} from '../../src/types'
 
 const mockRequest = (): SignUpControllerRequestType => ({
     email: faker.internet.email(),

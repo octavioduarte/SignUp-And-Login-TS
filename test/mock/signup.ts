@@ -1,4 +1,4 @@
-import { CreateAccount, SignUpControllerRequestType, SignUpControllerResponseType } from "../types/controllers/signup"
+import { CreateAccount, SignUpControllerRequestType, SignUpControllerResponseType } from "../../src/types"
 
 
 export class CreateAccountSpy implements CreateAccount {

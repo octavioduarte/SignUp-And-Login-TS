@@ -1,0 +1,1 @@
+export * from './no-permission-to-register-new-user'

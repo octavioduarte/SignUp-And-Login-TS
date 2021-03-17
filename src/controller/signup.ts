@@ -1,4 +1,10 @@
-import { SignUpControllerRequestType, CreateAccount } from "../types/signup";
+import 
+    {   SignUpControllerRequestType,
+        CreateAccount,
+        CodeErrors as code_errors 
+} from "../types/controllers/signup";
+import { forbidden } from "../types/helpers/response-http";
+import { NoPermissionToRegisterNewUser } from "../types/errors/no-permission-to-register-new-user";
 
 export class SignUpController {
     constructor(
@@ -6,7 +12,10 @@ export class SignUpController {
     ){}
 
     async handle(request: SignUpControllerRequestType) {
-        await this.createAccount.create(request)
-        return request
+        const result = await this.createAccount.create(request)
+        if (result.result === code_errors.no_permission) {
+            return forbidden(new NoPermissionToRegisterNewUser())
+        }
+        return result
     }
 }

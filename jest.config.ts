@@ -1,6 +1,14 @@
 export default {
-  clearMocks: true,
-  coverageDirectory: "coverage",
-  coverageProvider: "v8",
-  collectCoverageFrom: ['<rootDir>/src/**/*.ts']
+  coverageDirectory: 'coverage',
+  coverageProvider: 'babel',
+  testEnvironment: 'node',
+  collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
+  roots: ['<rootDir>/test'],
+  transform: {
+    '.+\\.ts$': 'ts-jest'
+  },
+  moduleNameMapper: {
+    '@/test/(.*)': '<rootDir>/test/$1',
+    '@/(.*)': '<rootDir>/src/$1'
+  }
 };

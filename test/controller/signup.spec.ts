@@ -1,7 +1,9 @@
 import faker from 'faker'
 import { SignUpController } from '../../src/controller/signup'
-import { SignUpControllerRequestType } from '../../src/types/signup'
+import { SignUpControllerRequestType, CodeErrors as code_errors } from '../../src/types/controllers/signup'
 import { CreateAccountSpy } from '../mock/signup'
+import { forbidden } from '../../src/types/helpers/response-http'
+import { NoPermissionToRegisterNewUser } from '../../src/types/errors/no-permission-to-register-new-user'
 
 const mockRequest = (): SignUpControllerRequestType => ({
     email: faker.internet.email(),
@@ -39,4 +41,11 @@ describe('SignUp Controller', () => {
             type_account: bodyRequest.type_account
         })
     })
+
+    test('Should return 403 if CreateAccount returns no permission code', async () => {
+        const { sut, createAccountSpy } = makeSut()
+        createAccountSpy.result = code_errors.no_permission
+        const httpResponse = await sut.handle(mockRequest())
+        expect(httpResponse).toEqual(forbidden(new NoPermissionToRegisterNewUser()))
+      })
 }) 

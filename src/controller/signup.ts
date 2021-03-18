@@ -4,7 +4,8 @@ import {
     NoPermissionToRegisterNewUser,
     SignUpControllerRequestType,
     CodeErrors as code_errors,
-    serverError
+    serverError,
+    ok
 } from '../../src/types'
 
 export class SignUpController {
@@ -18,7 +19,7 @@ export class SignUpController {
             if (result.result === code_errors.no_permission) {
                 return forbidden(new NoPermissionToRegisterNewUser())
             }
-            return result
+            return ok(result)
         } catch (error) {
             return serverError(error)
         }

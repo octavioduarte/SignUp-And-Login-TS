@@ -11,6 +11,7 @@ export const settings: SettingsType = {
         port: Number(process.env.DB_PORT),
         type: process.env.DB_TYPE as 'mysql',
         username: process.env.DB_USER,
+        entities: process.env.PATH_ENTITIES as unknown as string[]
     }
 }
 

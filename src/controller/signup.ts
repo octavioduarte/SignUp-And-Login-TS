@@ -22,11 +22,11 @@ export class SignUpController {
             if (error) {
                 return badRequest(error)
             }
-            const result = await this.createAccount.create(request)
-            if (result.result === code_errors.no_permission) {
+            const { result, ...userData } = await this.createAccount.create(request)
+            if (result === code_errors.no_permission) {
                 return forbidden(new NoPermissionToRegisterNewUser())
             }
-            return ok(result)
+            return ok(userData)
         } catch (error) {
             return serverError(error)
         }

@@ -72,10 +72,7 @@ describe('SignUp Controller', () => {
         const { sut, createAccountSpy } = makeSut()
         const bodyRequest = mockRequest()
         const httpResponse = await sut.handle(bodyRequest)
-        expect(httpResponse).toEqual(ok({
-            ...bodyRequest,
-            result: createAccountSpy.result
-        }))
+        expect(httpResponse).toEqual(ok({...bodyRequest}))
       })
 
       test('Should call Validation with correct value', async () => {

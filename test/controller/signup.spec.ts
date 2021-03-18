@@ -7,7 +7,8 @@ import {
     SignUpControllerRequestType,
     CodeErrors as code_errors,
     serverError,
-    ServerError
+    ServerError,
+    ok
 } from '../../src/types'
 import { throwError } from '../mock/types/internal-error-helper'
 
@@ -61,4 +62,14 @@ describe('SignUp Controller', () => {
         const httpResponse = await sut.handle(mockRequest())
         expect(httpResponse).toEqual(serverError(new ServerError(null as any)))
     })
+
+    test('Should return 200 if valid data is provided', async () => {
+        const { sut, createAccountSpy } = makeSut()
+        const bodyRequest = mockRequest()
+        const httpResponse = await sut.handle(bodyRequest)
+        expect(httpResponse).toEqual(ok({
+            ...bodyRequest,
+            result: createAccountSpy.result
+        }))
+      })
 }) 

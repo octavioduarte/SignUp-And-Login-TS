@@ -15,5 +15,10 @@
   },
   "scripts": {
     "test": "jest"
+  },
+  "dependencies": {
+    "mysql2": "^2.2.5",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.31"
   }
 }

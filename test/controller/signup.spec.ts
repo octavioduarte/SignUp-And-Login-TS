@@ -10,7 +10,7 @@ import {
     ServerError,
     ok
 } from '../../src/types'
-import { throwError } from '../mock/types/internal-error-helper'
+import { throwError, ValidationSpy } from '../mock/types'
 
 const mockRequest = (): SignUpControllerRequestType => ({
     email: faker.internet.email(),
@@ -23,15 +23,18 @@ const mockRequest = (): SignUpControllerRequestType => ({
 type SutTypes = {
     createAccountSpy: CreateAccountSpy
     sut: SignUpController
+    validationSpy: ValidationSpy
 }
 
 const makeSut = (): SutTypes => {
     const createAccountSpy = new CreateAccountSpy()
-    const sut = new SignUpController(createAccountSpy)
+    const validationSpy = new ValidationSpy()
+    const sut = new SignUpController(createAccountSpy, validationSpy)
 
     return {
         createAccountSpy,
-        sut
+        sut,
+        validationSpy
     }
 }
 
@@ -72,4 +75,11 @@ describe('SignUp Controller', () => {
             result: createAccountSpy.result
         }))
       })
+
+      test('Should call Validation with correct value', async () => {
+        const { sut, validationSpy } = makeSut()
+        const request = mockRequest()
+        await sut.handle(request)
+        expect(validationSpy.input).toEqual(request)
+      })    
 }) 

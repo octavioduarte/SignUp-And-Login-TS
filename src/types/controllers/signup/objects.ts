@@ -3,7 +3,7 @@ export type SignUpControllerRequestType = {
     name: string
     password: string
     status_account: boolean
-    type_account: string
+    type_account: number
 }
 
 export type SignUpControllerResponseType = {
@@ -11,6 +11,17 @@ export type SignUpControllerResponseType = {
 } & SignUpControllerRequestType
 
 
+export type AccountUser = {
+    id: number
+} & SignUpControllerRequestType
+
+
 export const CodeErrors = {
     no_permission: 1
+}
+
+export const PermissionsID = {
+    simple: 1,
+    admin: 2,
+    root: 3
 }

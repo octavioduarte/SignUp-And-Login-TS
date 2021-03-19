@@ -7,7 +7,8 @@ import {
     serverError,
     ok,
     Validation,
-    badRequest
+    badRequest,
+    AccountUser
 } from '../../src/types'
 
 export class SignUpController {
@@ -16,13 +17,13 @@ export class SignUpController {
         private readonly validation: Validation
     ) { }
 
-    async handle(request: SignUpControllerRequestType) {
+    async handle(request: SignUpControllerRequestType, responsibleAccount: AccountUser) {
         try {
             const error = this.validation.validate(request)
             if (error) {
                 return badRequest(error)
             }
-            const { result, ...userData } = await this.createAccount.create(request)
+            const { result, ...userData } = await this.createAccount.create(request, responsibleAccount)
             if (result === code_errors.no_permission) {
                 return forbidden(new NoPermissionToRegisterNewUser())
             }

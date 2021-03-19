@@ -1,8 +1,8 @@
 import {
-  AccountUser,
   AddAccountDB,
   CheckByEmail,
   CheckPermission,
+  CodeErrors as code_errors,
   CreateAccount,
   Hasher,
   SignUpControllerRequestType,
@@ -17,20 +17,27 @@ export class DbCreateAccount implements CreateAccount {
     private readonly createAccountRepository: AddAccountDB
   ) { }
 
-  async create(accountData: SignUpControllerRequestType, responsibleAccount: AccountUser) {
+  async create(accountData: SignUpControllerRequestType, tokenResponsibleAccount: string) {
+    let isValid: SignUpControllerResponseType = {
+      ...accountData,
+      result: 0
+    }
     const exists = await this.checkAccountByEmailRepository.checkByEmail(accountData.email)
-    let isValid: boolean | SignUpControllerResponseType = false
 
-    if (!exists) {
-      const userHasPermission = this.checkPermission.check(responsibleAccount.id)
-
-      if (userHasPermission) {
-        const password = await this.hasher.hash(accountData.password)
-        isValid = await this.createAccountRepository.create({ ...accountData, password })
-      }
+    if (exists) {
+      return { ...isValid, result: code_errors.email_already_exists }
     }
 
+    const userHasPermission = await this.checkPermission.check(tokenResponsibleAccount)
 
-    return isValid as SignUpControllerResponseType
+    if (!userHasPermission) {
+      return { ...isValid, result: code_errors.no_permission }
+    }
+
+    console.log("CHEGUEI AQUI !!!!", { exists, userHasPermission })
+    const password = await this.hasher.hash(accountData.password)
+    isValid = await this.createAccountRepository.create({ ...accountData, password })
+
+    return isValid
   }
 }

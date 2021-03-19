@@ -19,7 +19,8 @@ const mockRequest = (): SignUpControllerRequestType => ({
     name: faker.name.firstName(),
     password: faker.random.word(),
     status_account: true,
-    type_account: faker.random.word()
+    token_responsible: faker.random.word(),
+    type_account: faker.random.number()
 })
 
 type SutTypes = {

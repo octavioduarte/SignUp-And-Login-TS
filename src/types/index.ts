@@ -1,4 +1,4 @@
-export * from './controllers/signup'
+export * from './controllers'
 export * from './errors'
 export * from './helpers'
 export * from './utils'

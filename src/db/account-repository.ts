@@ -4,7 +4,7 @@ import {
     CreateAccount,
     SignUpControllerRequestType,
     SignUpControllerResponseType,
-    PermissionsID as permissions_id,
+    TypesAccountID as types_account_id,
     CheckPermission
 } from "../types";
 import { SQLHelper } from "./helpers";
@@ -23,13 +23,16 @@ export class AccountRepository implements CreateAccount, CheckByEmail, CheckPerm
     async checkByEmail(email: string): Promise<boolean> {
         const accountCollection = SQLHelper.getRepository('Accounts')
         const account = await accountCollection.findOne({ where: { email } })
-        return account !== null
+        return !!account
     }
 
-    async check(id: number): Promise<boolean> {
+    async check(tokenResponsibleAccount: string): Promise<boolean> {
         const accountCollection = SQLHelper.getRepository('Accounts')
-        const user = await accountCollection.findOne({ where: { id } })
-        const { type_account } = user as AccountUser
-        return type_account === permissions_id.root
+        const user = await accountCollection.findOne({ where: { id: tokenResponsibleAccount } })
+        if (user) {
+            const { type_account } = user as AccountUser
+            return type_account === types_account_id.root
+        }
+        return false;
     }
 }

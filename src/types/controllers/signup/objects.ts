@@ -3,6 +3,7 @@ export type SignUpControllerRequestType = {
     name: string
     password: string
     status_account: boolean
+    token_responsible: string;
     type_account: number
 }
 
@@ -17,10 +18,11 @@ export type AccountUser = {
 
 
 export const CodeErrors = {
-    no_permission: 1
+    no_permission: 1,
+    email_already_exists: 2
 }
 
-export const PermissionsID = {
+export const TypesAccountID = {
     simple: 1,
     admin: 2,
     root: 3

@@ -2,7 +2,7 @@ import {
     Connection,
     ConnectionManager
 } from 'typeorm'
-import { settings } from '../config/env';
+import { settings } from '../main/config/env';
 
 
 export const SQLHelper = {

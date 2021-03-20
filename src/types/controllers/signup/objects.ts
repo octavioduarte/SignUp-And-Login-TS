@@ -2,6 +2,7 @@ export type SignUpControllerRequestType = {
     email: string
     name: string
     password: string
+    password_confirmation: string
     status_account: boolean
     token_responsible: string;
     type_account: number

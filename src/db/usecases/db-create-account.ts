@@ -34,7 +34,6 @@ export class DbCreateAccount implements CreateAccount {
       return { ...isValid, result: code_errors.no_permission }
     }
 
-    console.log("CHEGUEI AQUI !!!!", { exists, userHasPermission })
     const password = await this.hasher.hash(accountData.password)
     isValid = await this.createAccountRepository.create({ ...accountData, password })
 

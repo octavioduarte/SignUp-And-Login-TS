@@ -19,4 +19,7 @@ export class Account {
 
     @Column()
     status!: boolean
+
+    @Column()
+    created_by!: number
 }

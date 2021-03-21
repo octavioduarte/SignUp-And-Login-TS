@@ -2,6 +2,7 @@ import {
     forbidden,
     CreateAccount,
     NoPermissionToRegisterNewUser,
+    EmailAlreadyExistsError,
     SignUpControllerRequestType,
     CodeErrors as code_errors,
     serverError,
@@ -31,8 +32,9 @@ export class SignUpController implements Controller {
                     case code_errors.no_permission:
                         return forbidden(new NoPermissionToRegisterNewUser())
                     case code_errors.email_already_exists:
+                        return badRequest(new EmailAlreadyExistsError())
                     default:
-                        return badRequest(new NoPermissionToRegisterNewUser())
+                        return serverError(new Error())
                 }
             }
 

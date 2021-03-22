@@ -1,7 +1,11 @@
 import faker from 'faker'
 import { LoginSpy } from '../mock/login'
 import { LoginController } from '../../src/controller/login'
-import { LoginControllerRequestType } from '../types'
+import {
+    LoginControllerRequestType,
+    CodeErrorsLogin as code_errors_login,
+    unauthorized
+} from '../../src/types'
 
 
 const mockRequest = (): LoginControllerRequestType => ({
@@ -35,5 +39,12 @@ describe('Login Controller', () => {
             email: bodyRequest.email,
             password: bodyRequest.password
         })
+    })
+
+    test('Should return 401 if invalid credentials are provided', async () => {
+        const { sut, loginSpy } = makeSut()
+        loginSpy.result = code_errors_login.invalid_credentials
+        const httpResponse = await sut.handle(mockRequest())
+        expect(httpResponse).toEqual(unauthorized())
     })
 })

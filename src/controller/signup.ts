@@ -43,7 +43,6 @@ export class SignUpController implements Controller {
 
             return ok(userData)
         } catch (error) {
-            console.error("===>", error)
             return serverError(error)
         }
     }

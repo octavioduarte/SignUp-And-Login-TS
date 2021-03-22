@@ -52,11 +52,13 @@ describe('SignUp Controller', () => {
         const bodyRequest = mockRequest()
         await sut.handle(bodyRequest)
         expect(createAccountSpy.params).toEqual({
+            created_by: bodyRequest.created_by,
             email: bodyRequest.email,
             name: bodyRequest.name,
             password: bodyRequest.password,
-            status_account: bodyRequest.status,
-            type_account: bodyRequest.type
+            password_confirmation: bodyRequest.password_confirmation,
+            status: bodyRequest.status,
+            type: bodyRequest.type
         })
     })
 

@@ -1,5 +1,5 @@
-import { LoginControllerRequestType } from "./object";
+import { LoginControllerRequestType, MakeLoginResponse } from "./object";
 
 export interface MakeLogin {
-    makeLogin: (propsLogin: LoginControllerRequestType) => Promise<boolean>
+    makeLogin: (propsLogin: LoginControllerRequestType) => Promise<MakeLoginResponse>
 }

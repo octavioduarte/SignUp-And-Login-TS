@@ -1,7 +1,7 @@
-import { SignUpControllerRequestType, SignUpControllerResponseType } from './objects'
+import { AccountUser, SignUpControllerRequestType, SignUpControllerResponseType } from './objects'
 
 export interface CreateAccount {
-    create: (account: SignUpControllerRequestType, responsibleAccount: string) => Promise<SignUpControllerResponseType>
+    create: (account: SignUpControllerRequestType, userID: number) => Promise<SignUpControllerResponseType>
 }
 
 export interface AddAccountDB {
@@ -12,6 +12,6 @@ export interface CheckByEmail {
     checkByEmail(email: string): Promise<boolean>
 }
 
-export interface CheckPermission {
-    check(tokenResponsibleAccount: string): Promise<boolean>
+export interface LoadUserByID {
+    loadUserByID(id: number): Promise<AccountUser | null>
 }

@@ -2,7 +2,7 @@ import faker from 'faker'
 import { SignUpController } from '../../src/controller/signup'
 import { CreateAccountSpy } from '../mock/signup'
 import {
-    forbidden, 
+    forbidden,
     NoPermissionToRegisterNewUser,
     SignUpControllerRequestType,
     CodeErrors as code_errors,
@@ -14,14 +14,19 @@ import {
 } from '../../src/types'
 import { throwError, ValidationSpy } from '../mock/types'
 
-const mockRequest = (): SignUpControllerRequestType => ({
-    email: faker.internet.email(),
-    name: faker.name.firstName(),
-    password: faker.random.word(),
-    status_account: true,
-    token_responsible: faker.random.word(),
-    type_account: faker.random.number()
-})
+
+const mockRequest = (): SignUpControllerRequestType => {
+    const secret_pass: string = faker.random.word()
+    return {
+        created_by: faker.random.number(),
+        email: faker.internet.email(),
+        name: faker.name.firstName(),
+        password: secret_pass,
+        password_confirmation: secret_pass,
+        status: true,
+        type: faker.random.number()
+    }
+}
 
 type SutTypes = {
     createAccountSpy: CreateAccountSpy
@@ -50,8 +55,8 @@ describe('SignUp Controller', () => {
             email: bodyRequest.email,
             name: bodyRequest.name,
             password: bodyRequest.password,
-            status_account: bodyRequest.status_account,
-            type_account: bodyRequest.type_account
+            status_account: bodyRequest.status,
+            type_account: bodyRequest.type
         })
     })
 
@@ -73,20 +78,20 @@ describe('SignUp Controller', () => {
         const { sut, createAccountSpy } = makeSut()
         const bodyRequest = mockRequest()
         const httpResponse = await sut.handle(bodyRequest)
-        expect(httpResponse).toEqual(ok({...bodyRequest}))
-      })
+        expect(httpResponse).toEqual(ok({ ...bodyRequest }))
+    })
 
-      test('Should call Validation with correct value', async () => {
+    test('Should call Validation with correct value', async () => {
         const { sut, validationSpy } = makeSut()
         const request = mockRequest()
         await sut.handle(request)
         expect(validationSpy.input).toEqual(request)
-      })
-      
-      test('Should return 400 if Validation returns an error', async () => {
+    })
+
+    test('Should return 400 if Validation returns an error', async () => {
         const { sut, validationSpy } = makeSut()
         validationSpy.error = new MissingParamError(faker.random.word())
         const httpResponse = await sut.handle(mockRequest())
         expect(httpResponse).toEqual(badRequest(validationSpy.error))
-      })
+    })
 }) 

@@ -1,11 +1,11 @@
 export type SignUpControllerRequestType = {
+    created_by: number;
     email: string
     name: string
     password: string
     password_confirmation: string
-    status_account: boolean
-    token_responsible: string;
-    type_account: number
+    status: boolean
+    type: number
 }
 
 export type SignUpControllerResponseType = {
@@ -19,12 +19,13 @@ export type AccountUser = {
 
 
 export const CodeErrors = {
+    email_already_exists: 2,
     no_permission: 1,
-    email_already_exists: 2
+    user_responsible_for_registration_not_found: 3
 }
 
 export const TypesAccountID = {
-    simple: 1,
     admin: 2,
-    root: 3
+    root: 3,
+    simple: 1
 }

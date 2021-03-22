@@ -4,12 +4,11 @@ import {
     CreateAccount,
     SignUpControllerRequestType,
     SignUpControllerResponseType,
-    TypesAccountID as types_account_id,
-    CheckPermission
+    LoadUserByID
 } from "../types";
 import { SQLHelper } from "./helpers";
 
-export class AccountRepository implements CreateAccount, CheckByEmail, CheckPermission {
+export class AccountRepository implements CreateAccount, CheckByEmail, LoadUserByID {
 
     async create(account: SignUpControllerRequestType): Promise<SignUpControllerResponseType> {
         const accountRepository = SQLHelper.getRepository('Accounts')
@@ -26,13 +25,13 @@ export class AccountRepository implements CreateAccount, CheckByEmail, CheckPerm
         return !!account
     }
 
-    async check(tokenResponsibleAccount: string): Promise<boolean> {
+    async loadUserByID(id: number): Promise<AccountUser | null> {
         const accountCollection = SQLHelper.getRepository('Accounts')
-        const user = await accountCollection.findOne({ where: { id: tokenResponsibleAccount } })
+        const user = await accountCollection.findOne({ where: { id } })
         if (user) {
-            const { type_account } = user as AccountUser
-            return type_account === types_account_id.root
+            return user as AccountUser
         }
-        return false;
+
+        return null
     }
 }

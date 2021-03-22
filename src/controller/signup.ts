@@ -9,7 +9,8 @@ import {
     ok,
     Validation,
     badRequest,
-    Controller
+    Controller,
+    UserResponsibleForRegistrationNotFoundError
 } from '../../src/types'
 
 export class SignUpController implements Controller {
@@ -20,12 +21,12 @@ export class SignUpController implements Controller {
 
     async handle(request: SignUpControllerRequestType) {
         try {
-            const responsibleAccount = request.token_responsible
             const error = this.validation.validate(request)
             if (error) {
                 return badRequest(error)
             }
-            const { result, ...userData } = await this.createAccount.create(request, responsibleAccount)
+            const { created_by } = request
+            const { result, ...userData } = await this.createAccount.create(request, created_by)
 
             if (result) {
                 switch (result) {
@@ -33,6 +34,8 @@ export class SignUpController implements Controller {
                         return forbidden(new NoPermissionToRegisterNewUser())
                     case code_errors.email_already_exists:
                         return badRequest(new EmailAlreadyExistsError())
+                    case code_errors.user_responsible_for_registration_not_found:
+                        return badRequest(new UserResponsibleForRegistrationNotFoundError()) 
                     default:
                         return serverError(new Error())
                 }

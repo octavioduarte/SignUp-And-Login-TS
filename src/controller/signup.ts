@@ -10,7 +10,8 @@ import {
     Validation,
     badRequest,
     Controller,
-    UserResponsibleForRegistrationNotFoundError
+    UserResponsibleForRegistrationNotFoundError,
+    HttpResponse
 } from '../../src/types'
 
 export class SignUpController implements Controller {
@@ -19,7 +20,7 @@ export class SignUpController implements Controller {
         private readonly validation: Validation
     ) { }
 
-    async handle(request: SignUpControllerRequestType) {
+    async handle(request: SignUpControllerRequestType): Promise<HttpResponse> {
         try {
             const error = this.validation.validate(request)
             if (error) {

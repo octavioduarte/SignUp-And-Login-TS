@@ -15,3 +15,7 @@ export interface CheckByEmail {
 export interface LoadUserByID {
     loadUserByID(id: number): Promise<AccountUser | null>
 }
+
+export interface LoadUserByCustomField {
+    loadUserByCustomField(fieldName: string, fieldValue: any): Promise<AccountUser | null>
+}

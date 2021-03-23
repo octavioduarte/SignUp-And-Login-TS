@@ -1,11 +1,18 @@
-import { AccountUser, SignUpControllerRequestType, SignUpControllerResponseType } from './objects'
+import {
+    AccountUserDB,
+    ResultCreateUser,
+    SignUpControllerRequestType,
+} from './objects'
+
 
 export interface CreateAccount {
-    create: (account: SignUpControllerRequestType, userID: number) => Promise<SignUpControllerResponseType>
+    create: (account: SignUpControllerRequestType, userID: number) => Promise<ResultCreateUser>
 }
 
-export interface AddAccountDB {
-    create: (account: SignUpControllerRequestType) => Promise<SignUpControllerResponseType>
+
+
+export interface SaveUserDB {
+    saveUserDB: (account: SignUpControllerRequestType) => Promise<AccountUserDB>
 }
 
 export interface CheckByEmail {
@@ -13,9 +20,9 @@ export interface CheckByEmail {
 }
 
 export interface LoadUserByID {
-    loadUserByID(id: number): Promise<AccountUser | null>
+    loadUserByID(id: number): Promise<AccountUserDB | null>
 }
 
 export interface LoadUserByCustomField {
-    loadUserByCustomField(fieldName: string, fieldValue: any): Promise<AccountUser | null>
+    loadUserByCustomField(fieldName: string, fieldValue: any): Promise<AccountUserDB | null>
 }

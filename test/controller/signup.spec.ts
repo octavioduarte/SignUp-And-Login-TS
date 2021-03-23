@@ -5,7 +5,7 @@ import {
     forbidden,
     NoPermissionToRegisterNewUser,
     SignUpControllerRequestType,
-    CodeErrors as code_errors,
+    CodeErrorsSignUp as code_errors,
     serverError,
     ServerError,
     ok,
@@ -80,7 +80,7 @@ describe('SignUp Controller', () => {
         const { sut } = makeSut()
         const bodyRequest = mockRequest()
         const httpResponse = await sut.handle(bodyRequest)
-        expect(httpResponse).toEqual(ok({ ...bodyRequest }))
+        expect(httpResponse.statusCode).toEqual(200)
     })
 
     test('Should call Validation with correct value', async () => {

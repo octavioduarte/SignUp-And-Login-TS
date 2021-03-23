@@ -67,7 +67,7 @@ describe('Login Controller', () => {
         const bodyRequest = mockRequest()
         const httpResponse = await sut.handle(bodyRequest)
         expect(httpResponse.statusCode).toBe(200)
-        expect(httpResponse.body.email).toBe(loginSpy.user.email)
+        expect(httpResponse.body.user_data.email).toBe(loginSpy.user.user_data?.email)
     })
 
 

@@ -1,13 +1,13 @@
 import {
-  AddAccountDB,
   CheckByEmail,
   LoadUserByID,
-  CodeErrors as code_errors,
+  CodeErrorsSignUp as code_errors_signup,
+  TypesAccountID as types_account_id,
   CreateAccount,
   Hasher,
   SignUpControllerRequestType,
-  SignUpControllerResponseType,
-  TypesAccountID as types_account_id
+  ResultCreateUser,
+  SaveUserDB
 } from "../../types"
 
 export class DbCreateAccount implements CreateAccount {
@@ -15,37 +15,35 @@ export class DbCreateAccount implements CreateAccount {
     private readonly checkAccountByEmailRepository: CheckByEmail,
     private readonly loadUser: LoadUserByID,
     private readonly hasher: Hasher,
-    private readonly createAccountRepository: AddAccountDB
+    private readonly createAccountRepository: SaveUserDB
   ) { }
 
-  async create(accountData: SignUpControllerRequestType, userID: number) {
-    let isValid: SignUpControllerResponseType = {
-      ...accountData,
-      result: 0
-    }
+  async create(accountData: SignUpControllerRequestType, userID: number): Promise<ResultCreateUser> {
     const exists = await this.checkAccountByEmailRepository.checkByEmail(accountData.email)
 
     if (exists) {
-      return { ...isValid, result: code_errors.email_already_exists }
+      return { result: code_errors_signup.email_already_exists }
     }
 
     const userResponsibleForRegistration = await this.loadUser.loadUserByID(Number(userID))
 
     if (!userResponsibleForRegistration) {
-      return { ...isValid, result: code_errors.user_responsible_for_registration_not_found }
+      return { result: code_errors_signup.user_responsible_for_registration_not_found }
     }
 
     if (userResponsibleForRegistration.type !== types_account_id.root &&
       userResponsibleForRegistration.type !== types_account_id.admin
     ) {
-      return { ...isValid, result: code_errors.no_permission }
+      return { result: code_errors_signup.no_permission }
     }
 
     const { id } = userResponsibleForRegistration
 
-    const password = await this.hasher.hash(accountData.password)
-    isValid = await this.createAccountRepository.create({ ...accountData, created_by: id , password })
+    const passwordHashed = await this.hasher.hash(accountData.password)
+    const account = await this.createAccountRepository.saveUserDB({ ...accountData, created_by: id, password: passwordHashed })
 
-    return isValid
+    const { password, ...user_data } = account
+
+    return { user_data }
   }
 }

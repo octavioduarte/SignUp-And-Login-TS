@@ -8,17 +8,21 @@ export type SignUpControllerRequestType = {
     type: number
 }
 
-export type SignUpControllerResponseType = {
-    result: number
-} & SignUpControllerRequestType
 
-
-export type AccountUser = {
+export type AccountUserDB = {
     id: number
-} & SignUpControllerRequestType
+} & Omit<SignUpControllerRequestType, "password_confirmation">
 
 
-export const CodeErrors = {
+export type AccountUserResponseHttp = Omit<AccountUserDB, "password">
+
+export type ResultCreateUser = {
+    result?: number
+    user_data?: AccountUserResponseHttp
+}
+
+
+export const CodeErrorsSignUp = {
     email_already_exists: 2,
     no_permission: 1,
     user_responsible_for_registration_not_found: 3

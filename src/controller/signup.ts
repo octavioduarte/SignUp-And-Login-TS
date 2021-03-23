@@ -4,14 +4,14 @@ import {
     NoPermissionToRegisterNewUser,
     EmailAlreadyExistsError,
     SignUpControllerRequestType,
-    CodeErrors as code_errors,
+    CodeErrorsSignUp as code_errors,
     serverError,
     ok,
     Validation,
     badRequest,
     Controller,
     UserResponsibleForRegistrationNotFoundError,
-    HttpResponse
+    HttpResponse,
 } from '../../src/types'
 
 export class SignUpController implements Controller {
@@ -27,22 +27,17 @@ export class SignUpController implements Controller {
                 return badRequest(error)
             }
             const { created_by } = request
-            const { result, ...userData } = await this.createAccount.create(request, created_by)
+            const { result, user_data } = await this.createAccount.create(request, created_by) 
 
-            if (result) {
-                switch (result) {
-                    case code_errors.no_permission:
-                        return forbidden(new NoPermissionToRegisterNewUser())
-                    case code_errors.email_already_exists:
-                        return badRequest(new EmailAlreadyExistsError())
-                    case code_errors.user_responsible_for_registration_not_found:
-                        return badRequest(new UserResponsibleForRegistrationNotFoundError()) 
-                    default:
-                        return serverError(new Error())
-                }
+            switch (result) {
+                case code_errors.no_permission:
+                    return forbidden(new NoPermissionToRegisterNewUser())
+                case code_errors.email_already_exists:
+                    return badRequest(new EmailAlreadyExistsError())
+                case code_errors.user_responsible_for_registration_not_found:
+                    return badRequest(new UserResponsibleForRegistrationNotFoundError())
             }
-
-            return ok(userData)
+            return ok(user_data)
         } catch (error) {
             return serverError(error)
         }

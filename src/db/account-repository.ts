@@ -1,23 +1,19 @@
 import {
-    AccountUser,
     CheckByEmail,
-    CreateAccount,
+    SaveUserDB,
     SignUpControllerRequestType,
-    SignUpControllerResponseType,
     LoadUserByID,
-    LoadUserByCustomField
+    LoadUserByCustomField,
+    AccountUserDB
 } from "../types";
 import { SQLHelper } from "./helpers";
 
-export class AccountRepository implements CreateAccount, CheckByEmail, LoadUserByID, LoadUserByCustomField {
+export class AccountRepository implements SaveUserDB, CheckByEmail, LoadUserByID, LoadUserByCustomField {
 
-    async create(account: SignUpControllerRequestType): Promise<SignUpControllerResponseType> {
+    async saveUserDB(account: SignUpControllerRequestType): Promise<AccountUserDB> {
         const accountRepository = SQLHelper.getRepository('Accounts')
-        const user = await accountRepository.save(account)
-        return {
-            result: 0,
-            ...user
-        }
+        await accountRepository.save(account)
+        return await this.loadUserByCustomField('email', account.email) as AccountUserDB
     }
 
     async checkByEmail(email: string): Promise<boolean> {
@@ -26,20 +22,20 @@ export class AccountRepository implements CreateAccount, CheckByEmail, LoadUserB
         return !!account
     }
 
-    async loadUserByID(id: number): Promise<AccountUser | null> {
+    async loadUserByID(id: number): Promise<AccountUserDB | null> {
         const accountCollection = SQLHelper.getRepository('Accounts')
         const user = await accountCollection.findOne({ where: { id } })
         if (user) {
-            return user as AccountUser
+            return user as AccountUserDB
         }
         return null
     }
 
-    async loadUserByCustomField(fieldName: string, fieldValue: any): Promise<AccountUser | null> {
+    async loadUserByCustomField(fieldName: string, fieldValue: any): Promise<AccountUserDB | null> {
         const accountCollection = SQLHelper.getRepository('Accounts')
         const user = await accountCollection.findOne({ where: { [fieldName]: fieldValue } })
         if (user) {
-            return user as AccountUser
+            return user as AccountUserDB
         }
         return null
     }

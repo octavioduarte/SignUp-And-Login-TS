@@ -1,4 +1,5 @@
 import {
+    badRequest,
     CodeErrorsLogin as code_errors_login,
     Controller,
     HttpResponse,
@@ -20,7 +21,12 @@ export class LoginController implements Controller {
     async handle(request: LoginControllerRequestType): Promise<HttpResponse> {
 
         try {
-            this.validation.validate(request)
+            const error = this.validation.validate(request)
+            
+            if (error) {
+                return badRequest(error)
+            }
+
             const { result, ...userData } = await this.login.makeLogin(request)
             if (result) {
                 switch (result) {

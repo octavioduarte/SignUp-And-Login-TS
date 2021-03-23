@@ -6,17 +6,21 @@ import {
     MakeLogin,
     ok,
     serverError,
-    unauthorized
+    unauthorized,
+    Validation
 } from "../types";
 
 export class LoginController implements Controller {
     constructor(
         private readonly login: MakeLogin,
+        private readonly validation: Validation
+
     ) { }
 
     async handle(request: LoginControllerRequestType): Promise<HttpResponse> {
 
         try {
+            this.validation.validate(request)
             const { result, ...userData } = await this.login.makeLogin(request)
             if (result) {
                 switch (result) {

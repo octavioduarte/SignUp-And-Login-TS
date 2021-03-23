@@ -77,7 +77,7 @@ describe('SignUp Controller', () => {
     })
 
     test('Should return 200 if valid data is provided', async () => {
-        const { sut, createAccountSpy } = makeSut()
+        const { sut } = makeSut()
         const bodyRequest = mockRequest()
         const httpResponse = await sut.handle(bodyRequest)
         expect(httpResponse).toEqual(ok({ ...bodyRequest }))

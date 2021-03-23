@@ -5,7 +5,7 @@ import {
     LoginControllerRequestType,
     CodeErrorsLogin as code_errors_login,
     unauthorized,
-    serverError
+    serverError,
 } from '../../src/types'
 import { throwError } from '../mock/types'
 
@@ -55,5 +55,13 @@ describe('Login Controller', () => {
         jest.spyOn(loginSpy, 'makeLogin').mockImplementationOnce(throwError)
         const httpResponse = await sut.handle(mockRequest())
         expect(httpResponse).toEqual(serverError(new Error()))
-      })
+    })
+
+    test('Should return 200 if valid credentials are provided', async () => {
+        const { sut, loginSpy } = makeSut()
+        const bodyRequest = mockRequest()
+        const httpResponse = await sut.handle(bodyRequest)
+        expect(httpResponse.statusCode).toBe(200)
+        expect(httpResponse.body.email).toBe(loginSpy.user.email)
+    })
 })

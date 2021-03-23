@@ -6,6 +6,8 @@ import {
     CodeErrorsLogin as code_errors_login,
     unauthorized,
     serverError,
+    MissingParamError,
+    badRequest,
 } from '../../src/types'
 import { throwError, ValidationSpy } from '../mock/types'
 
@@ -69,11 +71,18 @@ describe('Login Controller', () => {
     })
 
 
-  test('Should call Validation with correct value', async () => {
-    const { sut, validationSpy } = makeSut()
-    const bodyRequest = mockRequest()
-    await sut.handle(bodyRequest)
-    expect(validationSpy.input).toEqual(bodyRequest)
-  })
+    test('Should call Validation with correct value', async () => {
+        const { sut, validationSpy } = makeSut()
+        const bodyRequest = mockRequest()
+        await sut.handle(bodyRequest)
+        expect(validationSpy.input).toEqual(bodyRequest)
+    })
+
+    test('Should return 400 if Validation returns an error', async () => {
+        const { sut, validationSpy } = makeSut()
+        validationSpy.error = new MissingParamError(faker.random.word())
+        const httpResponse = await sut.handle(mockRequest())
+        expect(httpResponse).toEqual(badRequest(validationSpy.error))
+    })
 
 })

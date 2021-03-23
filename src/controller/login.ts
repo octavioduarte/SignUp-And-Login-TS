@@ -15,15 +15,20 @@ export class LoginController implements Controller {
     ) { }
 
     async handle(request: LoginControllerRequestType): Promise<HttpResponse> {
-        const { result } = await this.login.makeLogin(request)
-        if (result) {
-            switch (result) {
-                case code_errors_login.invalid_credentials: 
-                    return unauthorized()
-                default:
-                    return serverError(new Error())
+
+        try {
+            const { result } = await this.login.makeLogin(request)
+            if (result) {
+                switch (result) {
+                    case code_errors_login.invalid_credentials:
+                        return unauthorized()
+                    default:
+                        return serverError(new Error())
+                }
             }
+            return new Promise(resolve => resolve(ok(request)))
+        } catch (error) {
+            return serverError(error)
         }
-        return new Promise(resolve => resolve(ok(request)))
     }
 } 

@@ -7,7 +7,7 @@ import {
     unauthorized,
     serverError,
 } from '../../src/types'
-import { throwError } from '../mock/types'
+import { throwError, ValidationSpy } from '../mock/types'
 
 
 const mockRequest = (): LoginControllerRequestType => ({
@@ -17,17 +17,20 @@ const mockRequest = (): LoginControllerRequestType => ({
 
 type SutTypes = {
     loginSpy: LoginSpy
+    validationSpy: ValidationSpy
     sut: LoginController
 }
 
 
 const makeSut = (): SutTypes => {
     const loginSpy = new LoginSpy()
-    const sut = new LoginController(loginSpy)
+    const validationSpy = new ValidationSpy()
+    const sut = new LoginController(loginSpy, validationSpy)
 
     return {
         loginSpy,
-        sut
+        sut,
+        validationSpy
     }
 }
 
@@ -64,4 +67,13 @@ describe('Login Controller', () => {
         expect(httpResponse.statusCode).toBe(200)
         expect(httpResponse.body.email).toBe(loginSpy.user.email)
     })
+
+
+  test('Should call Validation with correct value', async () => {
+    const { sut, validationSpy } = makeSut()
+    const bodyRequest = mockRequest()
+    await sut.handle(bodyRequest)
+    expect(validationSpy.input).toEqual(bodyRequest)
+  })
+
 })

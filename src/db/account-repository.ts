@@ -4,11 +4,12 @@ import {
     CreateAccount,
     SignUpControllerRequestType,
     SignUpControllerResponseType,
-    LoadUserByID
+    LoadUserByID,
+    LoadUserByCustomField
 } from "../types";
 import { SQLHelper } from "./helpers";
 
-export class AccountRepository implements CreateAccount, CheckByEmail, LoadUserByID {
+export class AccountRepository implements CreateAccount, CheckByEmail, LoadUserByID, LoadUserByCustomField {
 
     async create(account: SignUpControllerRequestType): Promise<SignUpControllerResponseType> {
         const accountRepository = SQLHelper.getRepository('Accounts')
@@ -31,7 +32,15 @@ export class AccountRepository implements CreateAccount, CheckByEmail, LoadUserB
         if (user) {
             return user as AccountUser
         }
+        return null
+    }
 
+    async loadUserByCustomField(fieldName: string, fieldValue: any): Promise<AccountUser | null> {
+        const accountCollection = SQLHelper.getRepository('Accounts')
+        const user = await accountCollection.findOne({ where: { [fieldName]: fieldValue } })
+        if (user) {
+            return user as AccountUser
+        }
         return null
     }
 }

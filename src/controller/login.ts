@@ -17,7 +17,7 @@ export class LoginController implements Controller {
     async handle(request: LoginControllerRequestType): Promise<HttpResponse> {
 
         try {
-            const { result } = await this.login.makeLogin(request)
+            const { result, ...userData } = await this.login.makeLogin(request)
             if (result) {
                 switch (result) {
                     case code_errors_login.invalid_credentials:
@@ -26,7 +26,8 @@ export class LoginController implements Controller {
                         return serverError(new Error())
                 }
             }
-            return new Promise(resolve => resolve(ok(request)))
+
+            return ok(userData)
         } catch (error) {
             return serverError(error)
         }

@@ -4,8 +4,10 @@ import { LoginController } from '../../src/controller/login'
 import {
     LoginControllerRequestType,
     CodeErrorsLogin as code_errors_login,
-    unauthorized
+    unauthorized,
+    serverError
 } from '../../src/types'
+import { throwError } from '../mock/types'
 
 
 const mockRequest = (): LoginControllerRequestType => ({
@@ -47,4 +49,11 @@ describe('Login Controller', () => {
         const httpResponse = await sut.handle(mockRequest())
         expect(httpResponse).toEqual(unauthorized())
     })
+
+    test('Should return 500 if Login throws', async () => {
+        const { sut, loginSpy } = makeSut()
+        jest.spyOn(loginSpy, 'makeLogin').mockImplementationOnce(throwError)
+        const httpResponse = await sut.handle(mockRequest())
+        expect(httpResponse).toEqual(serverError(new Error()))
+      })
 })

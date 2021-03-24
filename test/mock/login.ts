@@ -11,7 +11,7 @@ export class LoginSpy implements MakeLogin {
         this.params = params
         this.user = {
             user_data: {
-                created_by: faker.random.number(),
+                authorization: faker.random.word(),
                 email: this.params.email,
                 id: faker.random.number(),
                 name: faker.random.word(),

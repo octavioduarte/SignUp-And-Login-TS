@@ -1,4 +1,5 @@
-import { CreateAccount, SignUpControllerRequestType, ResultCreateUser } from "../../src/types"
+import fake from 'faker'
+import { CreateAccount, SignUpControllerRequestType, ResultCreateUser, GetUserByToken, AccountUserDB } from "../../src/types"
 
 
 export class CreateAccountSpy implements CreateAccount {
@@ -12,4 +13,21 @@ export class CreateAccountSpy implements CreateAccount {
             result: this.result
         }
     }
+}
+
+
+export class GetUserByTokenSpy implements GetUserByToken {
+    paeams!: string
+    async getUserByToken(token_user: string): Promise<AccountUserDB> {
+        return {
+            authorization: fake.random.word(),
+            email: fake.internet.email(),
+            id: fake.random.number(),
+            name: fake.name.firstName(),
+            password: fake.random.word(),
+            status: true,
+            type: fake.random.number()
+        }
+    }
+
 }

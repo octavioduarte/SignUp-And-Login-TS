@@ -1,6 +1,6 @@
 import faker from 'faker'
 import { SignUpController } from '../../src/controller/signup'
-import { CreateAccountSpy } from '../mock/signup'
+import { CreateAccountSpy, GetUserByTokenSpy } from '../mock/signup'
 import {
     forbidden,
     NoPermissionToRegisterNewUser,
@@ -18,7 +18,7 @@ import { throwError, ValidationSpy } from '../mock/types'
 const mockRequest = (): SignUpControllerRequestType => {
     const secret_pass: string = faker.random.word()
     return {
-        created_by: faker.random.number(),
+        authorization: faker.random.word(),
         email: faker.internet.email(),
         name: faker.name.firstName(),
         password: secret_pass,
@@ -37,7 +37,8 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
     const createAccountSpy = new CreateAccountSpy()
     const validationSpy = new ValidationSpy()
-    const sut = new SignUpController(createAccountSpy, validationSpy)
+    const getUserByToken = new GetUserByTokenSpy()
+    const sut = new SignUpController(getUserByToken, createAccountSpy, validationSpy)
 
     return {
         createAccountSpy,
@@ -52,7 +53,7 @@ describe('SignUp Controller', () => {
         const bodyRequest = mockRequest()
         await sut.handle(bodyRequest)
         expect(createAccountSpy.params).toEqual({
-            created_by: bodyRequest.created_by,
+            authorization: bodyRequest.authorization,
             email: bodyRequest.email,
             name: bodyRequest.name,
             password: bodyRequest.password,

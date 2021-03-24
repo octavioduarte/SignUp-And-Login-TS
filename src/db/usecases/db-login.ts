@@ -1,6 +1,7 @@
 import {
     AccountUserDB,
     CodeErrorsLogin as code_errors_login,
+    GenerateToken,
     HashComparer,
     LoadUserByCustomField,
     LoginControllerRequestType,
@@ -12,6 +13,7 @@ export class DbLogin implements MakeLogin {
     constructor(
         private readonly loadUser: LoadUserByCustomField,
         private readonly hashComparer: HashComparer,
+        private readonly generateToken: GenerateToken
 
     ) { }
     async makeLogin(propsLogin: LoginControllerRequestType): Promise<MakeLoginResponse> {
@@ -28,7 +30,7 @@ export class DbLogin implements MakeLogin {
             return { result: code_errors_login.account_disabled }
         }
 
-        const { password, ...userData } = user as AccountUserDB
+        const { password, ...user_data } = user as AccountUserDB
 
         const passwordMatches: boolean = await this.hashComparer.compare(propsLogin.password, password)
 
@@ -36,6 +38,8 @@ export class DbLogin implements MakeLogin {
             return { result: code_errors_login.invalid_credentials }
         }
 
-        return { ...userData, result: 0 }
+        const access_token = await this.generateToken.generate(String(user_data.id))
+
+        return { access_token, user_data }
     }
 }

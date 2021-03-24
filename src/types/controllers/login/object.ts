@@ -6,7 +6,8 @@ export type LoginControllerRequestType = {
 }
 
 export type MakeLoginResponse = {
-    result: number
+    access_token?: string
+    result?: number
     user_data?: Omit<AccountUserDB,
         "password" |
         "password_confirmation"

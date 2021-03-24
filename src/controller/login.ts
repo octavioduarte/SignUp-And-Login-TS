@@ -29,20 +29,16 @@ export class LoginController implements Controller {
                 return badRequest(error)
             }
 
-            const { result, ...userData } = await this.login.makeLogin(request)
-            if (result) {
-                switch (result) {
-                    case code_errors_login.invalid_credentials:
-                        return unauthorized()
-                    case code_errors_login.user_not_found:
-                        return badRequest(new UserNotFoundError())
-                    case code_errors_login.account_disabled: 
-                        return badRequest(new AccountDisabledError())
-                    default:
-                        return serverError(new Error())
-                }
+            const { access_token, user_data, result } = await this.login.makeLogin(request)
+            switch (result) {
+                case code_errors_login.invalid_credentials:
+                    return unauthorized()
+                case code_errors_login.user_not_found:
+                    return badRequest(new UserNotFoundError())
+                case code_errors_login.account_disabled:
+                    return badRequest(new AccountDisabledError())
             }
-            return ok(userData)
+            return ok({ access_token, user_data })
         } catch (error) {
             return serverError(error)
         }

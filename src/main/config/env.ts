@@ -22,10 +22,12 @@ export const settings: SettingsTypes = {
         entities: convertStrToArr(process.env.PATH_ENTITIES as string),
         synchronize: process.env.DB_SYNCHRONIZE === 'true'
     },
-    http_port: String(process.env.HTTP_PORT)
+    http_port: String(process.env.HTTP_PORT),
+    secret_token: String(process.env.SECRET_TOKEN)
 }
 
 type SettingsTypes = {
     db_props: ConnectionOptions
-    http_port: number | string
+    http_port: number | string,
+    secret_token: string
 } 

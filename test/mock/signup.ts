@@ -1,4 +1,3 @@
-import fake from "faker"
 import { CreateAccount, SignUpControllerRequestType, ResultCreateUser } from "../../src/types"
 
 

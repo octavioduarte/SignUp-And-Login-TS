@@ -21,7 +21,9 @@
   "scripts": {
     "test": "jest",
     "build": "rimraf dist && tsc",
-    "run:dev": "ts-node src/main/server.ts"
+    "run:dev": "ts-node src/main/server.ts",
+    "start": "node dist/src/main/server.js",
+    "create:user": "ts-node src/script-db.ts"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",

@@ -33,5 +33,6 @@ export const CodeErrorsSignUp = {
 export const TypesAccountID = {
     admin: 2,
     root: 3,
-    simple: 1
+    simple: 1,
+    system: 4
 }

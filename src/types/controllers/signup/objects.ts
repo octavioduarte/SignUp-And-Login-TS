@@ -1,5 +1,5 @@
 export type SignUpControllerRequestType = {
-    created_by: number;
+    authorization: string;
     email: string
     name: string
     password: string
@@ -7,6 +7,8 @@ export type SignUpControllerRequestType = {
     status: boolean
     type: number
 }
+
+export type SignUpSaveDB = { created_by: number } & Omit<SignUpControllerRequestType, 'authorization'>
 
 
 export type AccountUserDB = {

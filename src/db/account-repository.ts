@@ -1,16 +1,16 @@
 import {
     CheckByEmail,
     SaveUserDB,
-    SignUpControllerRequestType,
     LoadUserByID,
     LoadUserByCustomField,
-    AccountUserDB
+    AccountUserDB,
+    SignUpSaveDB
 } from "../types";
 import { SQLHelper } from "./helpers";
 
 export class AccountRepository implements SaveUserDB, CheckByEmail, LoadUserByID, LoadUserByCustomField {
 
-    async saveUserDB(account: SignUpControllerRequestType): Promise<AccountUserDB> {
+    async saveUserDB(account: SignUpSaveDB): Promise<AccountUserDB> {
         const accountRepository = SQLHelper.getRepository('Accounts')
         await accountRepository.save(account)
         return await this.loadUserByCustomField('email', account.email) as AccountUserDB

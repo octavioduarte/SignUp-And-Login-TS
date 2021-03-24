@@ -2,6 +2,7 @@ import {
     AccountUserDB,
     ResultCreateUser,
     SignUpControllerRequestType,
+    SignUpSaveDB,
 } from './objects'
 
 
@@ -9,10 +10,12 @@ export interface CreateAccount {
     create: (account: SignUpControllerRequestType, userID: number) => Promise<ResultCreateUser>
 }
 
-
+export interface GetUserByToken {
+    getUserByToken(token_user: string): Promise<AccountUserDB>
+}
 
 export interface SaveUserDB {
-    saveUserDB: (account: SignUpControllerRequestType) => Promise<AccountUserDB>
+    saveUserDB: (account: SignUpSaveDB) => Promise<AccountUserDB>
 }
 
 export interface CheckByEmail {

@@ -17,8 +17,7 @@ const fieldsAndTypes = [
   { field_name: 'password', types: ['string'] },
   { field_name: 'password_confirmation', types: ['string'] },
   { field_name: 'type', types: ['number'] },
-  { field_name: 'status', types: ['boolean'] },
-  { field_name: 'created_by', types: ['number']}
+  { field_name: 'status', types: ['boolean'] }
 ]
 
 const wordsValidation: wordsValidationType = [

@@ -12,10 +12,12 @@ import {
     Controller,
     UserResponsibleForRegistrationNotFoundError,
     HttpResponse,
+    GetUserByToken,
 } from '../../src/types'
 
 export class SignUpController implements Controller {
     constructor(
+        private readonly getUserByToken: GetUserByToken,
         private readonly createAccount: CreateAccount,
         private readonly validation: Validation
     ) { }
@@ -26,8 +28,9 @@ export class SignUpController implements Controller {
             if (error) {
                 return badRequest(error)
             }
-            const { created_by } = request
-            const { result, user_data } = await this.createAccount.create(request, created_by) 
+            const { authorization } = request
+            const { id } = await this.getUserByToken.getUserByToken(authorization)
+            const { result, user_data } = await this.createAccount.create(request, id)
 
             switch (result) {
                 case code_errors.no_permission:
